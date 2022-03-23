@@ -1,0 +1,38 @@
+﻿@page "/createlevel"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize 
+    (Policy = Policies.Policies.CanCreateLevels)]
+@using Models
+@using Services
+
+<h3>CreateLevel</h3>
+<h2>@NextLevelId</h2>
+<button @onclick="@(() => SaveLevel())" class="btn btn-primary edit-btn mb-2">Save level</button>
+
+
+
+@if (Level == null)
+{
+
+}
+else
+{
+    <div>
+        <table class="table" style="width: @($"{Level.MapGrid.GetLength(1) * 35}px");">
+            <tbody>
+                @for (int row = 0; row < Level.MapGrid.GetLength(0); row++)
+                {
+                    <tr>
+                        @for (int col = 0; col < Level.MapGrid.GetLength(1); col++)
+                        {
+                            var r = row;
+                            var c = col;
+                            var typeOfTileClass = TypeOfTileClass(Level.MapGrid[row, col]);
+                            <td class="@typeOfTileClass" @onclick="@(() => ChangeTileType(r, c))"></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+

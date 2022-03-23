@@ -1,0 +1,52 @@
+﻿@page "/sokoban"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize
+(Policy = Policies.Policies.CanPlayLevels)]
+@using Models
+
+<h3>Sokoban</h3>
+<h2>@GameWon</h2>
+
+<EditForm Model="@LevelNumber" OnValidSubmit="@LoadLevel">
+    <div>
+        <div class="form-group row">
+            <label for="LevelNumber" class="col-sm-3">Level number </label>
+            <InputNumber id="LevelNumber" class="form-control col-sm-4" @bind-Value="@LevelNumber" Min="0" Max="10"></InputNumber>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Load level</button>
+    </div>
+</EditForm>
+
+
+@if (Level == null)
+{
+    if (!LevelIsLoading)
+    {
+        <p><em>Select Level to play</em></p>
+    }
+    else
+    {
+        <p><em>Level is loading...</em></p>
+    }
+}
+else
+{
+    <div tabindex="0" @onkeydown="ReadKey" @onkeydown:preventDefault>
+        <table class="table" style="width: @($"{Level.MapGrid.GetLength(1) * 35}px");">
+            <tbody>
+                @for (int row = 0; row < Level.MapGrid.GetLength(0); row++)
+                {
+                    <tr>
+                        @for (int col = 0; col < Level.MapGrid.GetLength(1); col++)
+                        {
+                            <td class="@TypeOfTileClass(Level.MapGrid[row, col])"></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
+
